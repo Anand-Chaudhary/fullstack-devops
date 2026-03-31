@@ -4,12 +4,16 @@ pipeline{
         stage('Build'){
             steps{
                 echo 'Building...'
+                sh 'docker build -t realtime@latest .'
+                echo 'Build completed.'
             }
         }
         
-        stage('Deploy'){
+        stage('Start Container'){
             steps{
-                echo 'Deploying...'
+                echo 'Starting container...'
+                sh 'docker run -d -p 5000:5000 --name realtime-container realtime:latest'
+                echo 'Container started.'
             }
         }
     }
