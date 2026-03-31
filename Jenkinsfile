@@ -4,7 +4,7 @@ pipeline{
         stage('Build'){
             steps{
                 echo 'Building...'
-                sh 'docker build -t realtime@latest .'
+                sh 'docker build -t realtime:latest .'
                 echo 'Build completed.'
             }
         }
