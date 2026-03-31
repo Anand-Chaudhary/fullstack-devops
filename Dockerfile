@@ -24,4 +24,6 @@ COPY --from=frontend-builder /app/dist /app/public
 
 RUN npm run build
 
+EXPOSE 3000
+
 CMD ["npm", "start"]
