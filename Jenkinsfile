@@ -32,7 +32,7 @@ pipeline{
                     username: 'dokcerHubUser'
                 )
             ])
-            sh 'docker run -d -p 3000:3000 ${env.username}/realtime:latest'
+            sh "docker run -d -p 3000:3000 ${env.username}/realtime:latest"
         }
     }
 }
