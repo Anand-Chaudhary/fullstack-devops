@@ -1,39 +1,44 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage('Build'){
-            steps{
+
+    stages {
+        stage('Build') {
+            steps {
                 echo 'Building...'
                 sh 'docker build -t realtime:latest .'
                 echo 'Build completed.'
             }
         }
-        
-        stage("Tag and push to docker hub"){
-            steps{
+
+        stage('Tag and push to docker hub') {
+            steps {
                 echo "Logging in"
                 withCredentials([
                     usernamePassword(
-                        credentialsId:'dockerHubCred',
-                        passwordVariable: 'password',
-                        usernameVariable: 'username'
+                        credentialsId: 'dockerHubCred',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
                     )
-                ])
-                sh "docker login -u ${env.username} -p ${env.password}"
-                sh "docker tag realtime:latest ${env.username}/realtime:latest"
-                sh "docker push ${env.username}/realtime:latest"
+                ]) {
+                    sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
+                    sh "docker tag realtime:latest ${DOCKER_USER}/realtime:latest"
+                    sh "docker push ${DOCKER_USER}/realtime:latest"
+                }
             }
         }
 
-        stage('Run Image'){
-            steps{
+        stage('Run Image') {
+            steps {
                 withCredentials([
-                usernamePassword(
-                    credentialsId: 'dockerHubCred',
-                    usernameVariable: 'username'
-                )
-            ])
-            sh "docker run -d -p 3000:3000 ${env.username}/realtime:latest"
+                    usernamePassword(
+                        credentialsId: 'dockerHubCred',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+                    sh "docker rm -f realtime || true"
+                    sh "docker run -d -p 3000:3000 ${DOCKER_USER}/realtime:latest"
+                }
             }
         }
     }
