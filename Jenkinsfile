@@ -26,13 +26,15 @@ pipeline{
         }
 
         stage('Run Image'){
-            withCredentials([
+            steps{
+                withCredentials([
                 usernamePassword(
                     credentialsId: 'dockerHubCred',
                     username: 'dokcerHubUser'
                 )
             ])
             sh "docker run -d -p 3000:3000 ${env.username}/realtime:latest"
+            }
         }
     }
 }
