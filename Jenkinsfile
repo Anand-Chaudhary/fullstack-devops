@@ -15,8 +15,8 @@ pipeline{
                 withCredentials([
                     usernamePassword(
                         credentialsId:'dockerHubCred',
-                        password: 'dockerHubPass',
-                        username: 'dockerHubUser'
+                        passwordVariable: 'password',
+                        usernameVariable: 'username'
                     )
                 ])
                 sh "docker login -u ${env.username} -p ${env.password}"
@@ -30,7 +30,7 @@ pipeline{
                 withCredentials([
                 usernamePassword(
                     credentialsId: 'dockerHubCred',
-                    username: 'dokcerHubUser'
+                    usernameVariable: 'username'
                 )
             ])
             sh "docker run -d -p 3000:3000 ${env.username}/realtime:latest"
